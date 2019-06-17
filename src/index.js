@@ -4,6 +4,7 @@ import {
     View,
     Image,
     NativeModules,
+    PixelRatio,
     requireNativeComponent,
     ViewPropTypes,
     StyleSheet,
@@ -25,7 +26,21 @@ function FastImageBase({
     forwardedRef,
     ...props
 }) {
-    const resolvedSource = Image.resolveAssetSource(source)
+    // https://github.com/DylanVann/react-native-fast-image/issues/255#issuecomment-421543442
+    const borderRadiusObject =
+        style && style.borderRadius
+            ? {
+                  borderRadius: Math.round(
+                      PixelRatio.getPixelSizeForLayoutSize(style.borderRadius),
+                  ),
+              }
+            : {}
+
+    const resolvedSource = Image.resolveAssetSource(
+        source instanceof Object
+            ? Object.assign({}, source, borderRadiusObject)
+            : source,
+    )
 
     if (fallback) {
         return (

@@ -15,6 +15,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.Headers;
 import com.bumptech.glide.load.model.LazyHeaders;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ApplicationVersionSignature;
 import com.facebook.react.bridge.JSApplicationIllegalArgumentException;
@@ -112,6 +114,19 @@ class FastImageViewConverter {
             .skipMemoryCache(skipMemoryCache)
             .priority(priority)
             .placeholder(TRANSPARENT_DRAWABLE);
+
+        // https://github.com/DylanVann/react-native-fast-image/issues/255#issuecomment-421543442
+        int borderRadius = 0;
+
+        try {
+            if (source.hasKey("borderRadius")) {
+                borderRadius = source.getInt("borderRadius");
+            }
+        } catch (NoSuchKeyException e) {}
+
+        if (borderRadius > 0) {
+            options = options.transforms(new CenterCrop(), new RoundedCorners(borderRadius));
+        }
         
         if (imageSource.isResource()) {
             // Every local resource (drawable) in Android has its own unique numeric id, which are
