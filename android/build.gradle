@@ -64,5 +64,7 @@ dependencies {
     implementation 'com.facebook.react:react-native:+'  // From node_modules
     implementation "com.github.bumptech.glide:glide:${glideVersion}"
     implementation "com.github.bumptech.glide:okhttp3-integration:${glideVersion}"
-    annotationProcessor "com.github.bumptech.glide:compiler:${glideVersion}"
+    // https://github.com/DylanVann/react-native-fast-image/issues/499#issuecomment-541251477
+    // annotationProcessor "com.github.bumptech.glide:compiler:${glideVersion}"
+    annotationProcessor "androidx.annotation:annotation:1.1.0"
 }
