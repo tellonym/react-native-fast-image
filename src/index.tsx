@@ -3,6 +3,7 @@ import {
     View,
     Image,
     NativeModules,
+    PixelRatio,
     requireNativeComponent,
     StyleSheet,
     FlexStyle,
@@ -148,7 +149,23 @@ function FastImageBase({
     if (fallback) {
         const cleanedSource = { ...(source as any) }
         delete cleanedSource.cache
-        const resolvedSource = Image.resolveAssetSource(cleanedSource)
+
+        const borderRadiusObject =
+        /* @ts-ignore */
+        style && style.borderRadius
+            ? {
+                  borderRadius: Math.round(
+                      /* @ts-ignore */
+                      PixelRatio.getPixelSizeForLayoutSize(style.borderRadius),
+                  ),
+              }
+            : {}
+
+        const resolvedSource = Image.resolveAssetSource(
+            source instanceof Object
+                ? Object.assign({}, cleanedSource, borderRadiusObject)
+                : source,
+        )
 
         return (
             <View style={[styles.imageContainer, style]} ref={forwardedRef}>
